@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2D Clothing Designer + Pattern Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="layout">
+    <section class="panel controls">
+      <h1>2D Clothing Designer</h1>
+      <p class="sub">Edit garment shape points in 2D, then generate sewing pattern pieces.</p>
+
+      <div class="group">
+        <h2>Body measurements</h2>
+        <p class="hint">Enter bust, waist, and hip (full circumference, cm). Apply to rebuild the main garment outline for proportion visualization. You can still edit points by hand afterward.</p>
+        <div class="row">
+          <div class="field">
+            <label for="measureBust">Bust (cm)</label>
+            <input id="measureBust" type="number" min="40" max="200" step="0.5" value="90" />
+          </div>
+          <div class="field">
+            <label for="measureWaist">Waist (cm)</label>
+            <input id="measureWaist" type="number" min="40" max="200" step="0.5" value="75" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="measureHips">Hips (cm)</label>
+          <input id="measureHips" type="number" min="40" max="200" step="0.5" value="100" />
+        </div>
+        <button id="applyMeasurementsBtn" type="button">Apply measurements to main shape</button>
+      </div>
+
+      <div class="group">
+        <h2>Visual Style</h2>
+        <div class="row">
+          <div class="field">
+            <label for="baseColor">Base Color</label>
+            <input id="baseColor" type="color" value="#4f46e5" />
+          </div>
+          <div class="field">
+            <label for="accentColor">Accent Color</label>
+            <input id="accentColor" type="color" value="#f8fafc" />
+          </div>
+        </div>
+        <div class="row">
+          <button id="openPatternDesignerBtn" class="secondary" type="button">Draw Pattern</button>
+          <button id="uploadPatternBtn" class="secondary" type="button">Upload PNG/JPEG</button>
+        </div>
+        <input id="patternImageInput" class="hidden" type="file" accept="image/png,image/jpeg" />
+        <div class="row" style="margin-top:0.55rem;">
+          <button id="clearPatternBtn" class="secondary" type="button">Use Stripe Overlay</button>
+          <button id="applyDrawnPatternBtn" class="secondary" type="button">Apply Drawn Pattern</button>
+        </div>
+        <p id="patternStatus" class="status-text">Current fill: default stripe overlay.</p>
+      </div>
+
+      <div class="group">
+        <h2>Pattern Settings</h2>
+        <div class="row">
+          <div class="field">
+            <label for="seamAllowance">Seam Allowance (cm)</label>
+            <input id="seamAllowance" type="number" min="0" step="0.25" value="1.5" />
+          </div>
+          <div class="field">
+            <label for="sleeveLength">Sleeve Length Factor</label>
+            <input id="sleeveLength" type="range" min="25" max="75" value="45" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="shapeSelect">Layer to edit</label>
+          <select id="shapeSelect"></select>
+        </div>
+        <div class="field">
+          <label for="layerNameInput">Layer name</label>
+          <input id="layerNameInput" type="text" maxlength="48" placeholder="Rename selected layer" />
+        </div>
+        <div class="row">
+          <button id="addShapeBtn" type="button">Add Shape</button>
+          <button id="addDetailBtn" type="button">Add Detail</button>
+        </div>
+        <div class="row">
+          <button id="deleteLayerBtn" class="secondary" type="button">Delete layer</button>
+        </div>
+        <div class="row">
+          <button id="addPointBtn" type="button">Add Point</button>
+          <button id="removePointBtn" class="secondary" type="button">Remove Point</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Actions</h2>
+        <div class="row">
+          <button id="generatePatternBtn" type="button">Generate Sewing Pattern</button>
+          <button id="downloadPreviewBtn" class="secondary" type="button">Download Preview</button>
+        </div>
+        <div class="row" style="margin-top:0.55rem;">
+          <button id="downloadPatternBtn" class="secondary" type="button">Download Pattern SVG</button>
+          <button id="resetShapeBtn" class="secondary" type="button">Reset Shape</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel visualizer">
+      <div class="canvas-box">
+        <h3>2D Drafting Space (drag points)</h3>
+        <canvas id="draftCanvas" width="900" height="900"></canvas>
+        <p class="legend">Tip: with a layer selected, use the dashed box: drag corners to resize, drag the round handle above to rotate, drag inside the shape to move. Each layer is independent. Rename layers in the sidebar.</p>
+      </div>
+
+      <div class="canvas-box">
+        <h3>Garment Visualization</h3>
+        <canvas id="previewCanvas" width="900" height="1200"></canvas>
+      </div>
+
+      <div class="canvas-box">
+        <h3>Generated Pattern Pieces</h3>
+        <div id="patternOutput"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="patternDesignerModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Pattern Designer</h3>
+        <button id="closePatternDesignerBtn" class="secondary" type="button">Close</button>
+      </div>
+      <canvas id="patternDrawCanvas" width="640" height="640"></canvas>
+      <div class="row" style="margin-top:0.6rem;">
+        <button id="patternBrushBtn" type="button">Brush</button>
+        <button id="patternEraserBtn" class="secondary" type="button">Eraser</button>
+      </div>
+      <div class="row" style="margin-top:0.55rem;">
+        <input id="patternBrushColor" type="color" value="#111827" />
+        <input id="patternBrushSize" type="range" min="1" max="32" value="6" />
+      </div>
+      <div class="row" style="margin-top:0.55rem;">
+        <button id="clearPatternDrawBtn" class="secondary" type="button">Clear Drawing</button>
+        <button id="savePatternDrawBtn" type="button">Save Pattern</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

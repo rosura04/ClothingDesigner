@@ -1,0 +1,256 @@
+:root {
+  --bg: #111827;
+  --panel: #1f2937;
+  --panel-soft: #243142;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #22d3ee;
+  --accent-2: #38bdf8;
+  --border: #334155;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 55%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.layout {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(320px, 1fr) minmax(420px, 2fr);
+}
+
+.panel {
+  background: linear-gradient(160deg, var(--panel) 0%, #172235 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.controls {
+  padding: 1rem;
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: 1.3rem;
+}
+
+.sub {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.group {
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.group h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+
+.field {
+  margin-bottom: 0.65rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #d1d5db;
+  font-size: 0.88rem;
+}
+
+input[type="range"],
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  color: var(--text);
+  padding: 0.45rem 0.55rem;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  cursor: pointer;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0f172a;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+button.secondary {
+  background: #334155;
+  color: #f8fafc;
+  border: 1px solid #475569;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.visualizer {
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.canvas-box {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.canvas-box h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #e2e8f0;
+}
+
+canvas {
+  width: 100%;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  border: 1px solid #334155;
+  border-radius: 14px;
+  display: block;
+}
+
+#previewCanvas {
+  aspect-ratio: 3 / 4;
+}
+
+#draftCanvas {
+  aspect-ratio: 1 / 1;
+}
+
+#patternOutput {
+  min-height: 200px;
+  border: 1px dashed #475569;
+  border-radius: 12px;
+  padding: 0.6rem;
+  background: #0f172a;
+  overflow: auto;
+}
+
+#patternOutput svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #fff;
+}
+
+.legend {
+  color: var(--muted);
+  font-size: 0.84rem;
+  margin: 0;
+}
+
+.status-text {
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  margin-top: 0.45rem;
+  min-height: 1.1rem;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: 0 0 0.5rem;
+  line-height: 1.35;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.7);
+  z-index: 20;
+  padding: 1rem;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(760px, 100%);
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 0.8rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.modal-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#patternDrawCanvas {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #fff;
+  cursor: crosshair;
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
